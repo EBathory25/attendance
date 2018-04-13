@@ -1,0 +1,52 @@
+﻿<Window x:Class="LastAndFinalVersion.View.LoginWithCardreader"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LastAndFinalVersion.Helpers"
+        xmlns:mm="clr-namespace:LastAndFinalVersion.ViewModel"
+        mc:Ignorable="d"
+        
+        Title="LoginWithCardreader" Height="400" Width="400">
+    <Window.DataContext>
+        <mm:LoginWithCardreaderViewModel/>
+    </Window.DataContext>
+    <Grid>
+       
+        <Border Background="#2e3137" CornerRadius="20" Margin="20">
+            <StackPanel Margin="20">
+              
+                <Label Content="Login" 
+               Foreground="White" FontSize="25" HorizontalAlignment="Center"/>
+                <Separator></Separator>
+                <TextBlock Height="50" 
+                   HorizontalAlignment="Center"
+                   Margin="24,48,0,0"
+                   Name="textBlockHeading" 
+                   VerticalAlignment="Top"
+                          
+                   FontSize="12" 
+                      Foreground="Crimson"
+                   FontStyle="Italic" 
+                   Padding="5">
+                    Please swipe the card on the<LineBreak></LineBreak> card reader for authentication!
+                </TextBlock>
+                <ProgressBar x:Name="loginProgress" Height="10" Margin="0,0,-0.4,0" />
+
+                <Label Content="Password"     Foreground="White"/>
+                <PasswordBox x:Name="passwordBox" 
+                         MaxLength="10"
+                    local:PasswordHelper.BindPassword="true"
+                         local:PasswordHelper.BoundPassword="{Binding Path=PWD, Mode=TwoWay, ValidatesOnDataErrors=True,UpdateSourceTrigger=PropertyChanged}"
+                PasswordChar="*" 
+                         Background="#545d6a" 
+                         Foreground="White"
+                             PasswordChanged="passwordBox_PasswordChanged"
+             FontSize="18">
+                   
+                </PasswordBox>
+
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

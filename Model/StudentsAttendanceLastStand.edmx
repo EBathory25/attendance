@@ -1,0 +1,414 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="DatabaseStudentsModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AttendanceList">
+          <Key>
+            <PropertyRef Name="sNr" />
+          </Key>
+          <Property Name="sNr" Type="int" Nullable="false" />
+          <Property Name="SN" Type="int" Nullable="false" />
+          <Property Name="fName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="lName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="dateArrival" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+          <Property Name="dateDeparture" Type="datetime" />
+          <Property Name="hoursSpent" Type="int" />
+        </EntityType>
+        <EntityType Name="ChildCourse">
+          <Key>
+            <PropertyRef Name="courseID" />
+          </Key>
+          <Property Name="courseID" Type="int" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="sNr" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Courses">
+          <Key>
+            <PropertyRef Name="courseID" />
+          </Key>
+          <Property Name="courseName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="SNTeacher" Type="int" Nullable="false" />
+          <Property Name="education" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ClassID" Type="nvarchar" MaxLength="50" />
+          <Property Name="courseID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Login">
+          <Key>
+            <PropertyRef Name="UserName" />
+          </Key>
+          <Property Name="SNTeacher" Type="int" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="pwd" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RegisterStudent">
+          <Key>
+            <PropertyRef Name="SN" />
+          </Key>
+          <Property Name="SN" Type="int" Nullable="false" />
+          <Property Name="fName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="lName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="sNr" Type="int" Nullable="false" />
+          <Property Name="semester" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RegisterTeacher">
+          <Key>
+            <PropertyRef Name="SNTeacher" />
+          </Key>
+          <Property Name="SNTeacher" Type="int" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="pwd" Type="int" Nullable="false" />
+          <Property Name="fullName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="CourseName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="courseID" Type="int" />
+          <Property Name="education" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <Association Name="FK_AttendanceList_ToTable">
+          <End Role="RegisterStudent" Type="Self.RegisterStudent" Multiplicity="1" />
+          <End Role="AttendanceList" Type="Self.AttendanceList" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RegisterStudent">
+              <PropertyRef Name="SN" />
+            </Principal>
+            <Dependent Role="AttendanceList">
+              <PropertyRef Name="SN" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ChildCourse_ToTable_1">
+          <End Role="AttendanceList" Type="Self.AttendanceList" Multiplicity="1" />
+          <End Role="ChildCourse" Type="Self.ChildCourse" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AttendanceList">
+              <PropertyRef Name="sNr" />
+            </Principal>
+            <Dependent Role="ChildCourse">
+              <PropertyRef Name="sNr" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Courses_ToTable">
+          <End Role="RegisterTeacher" Type="Self.RegisterTeacher" Multiplicity="1" />
+          <End Role="Courses" Type="Self.Courses" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RegisterTeacher">
+              <PropertyRef Name="SNTeacher" />
+            </Principal>
+            <Dependent Role="Courses">
+              <PropertyRef Name="SNTeacher" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RegisterStudent_ToTable">
+          <End Role="AttendanceList" Type="Self.AttendanceList" Multiplicity="1" />
+          <End Role="RegisterStudent" Type="Self.RegisterStudent" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AttendanceList">
+              <PropertyRef Name="sNr" />
+            </Principal>
+            <Dependent Role="RegisterStudent">
+              <PropertyRef Name="sNr" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RegisterTeacher_ToTable">
+          <End Role="Courses" Type="Self.Courses" Multiplicity="0..1" />
+          <End Role="RegisterTeacher" Type="Self.RegisterTeacher" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Courses">
+              <PropertyRef Name="courseID" />
+            </Principal>
+            <Dependent Role="RegisterTeacher">
+              <PropertyRef Name="courseID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DatabaseStudentsModelStoreContainer">
+          <EntitySet Name="AttendanceList" EntityType="Self.AttendanceList" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ChildCourse" EntityType="Self.ChildCourse" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Courses" EntityType="Self.Courses" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Login" EntityType="Self.Login" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RegisterStudent" EntityType="Self.RegisterStudent" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RegisterTeacher" EntityType="Self.RegisterTeacher" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_AttendanceList_ToTable" Association="Self.FK_AttendanceList_ToTable">
+            <End Role="RegisterStudent" EntitySet="RegisterStudent" />
+            <End Role="AttendanceList" EntitySet="AttendanceList" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ChildCourse_ToTable_1" Association="Self.FK_ChildCourse_ToTable_1">
+            <End Role="AttendanceList" EntitySet="AttendanceList" />
+            <End Role="ChildCourse" EntitySet="ChildCourse" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Courses_ToTable" Association="Self.FK_Courses_ToTable">
+            <End Role="RegisterTeacher" EntitySet="RegisterTeacher" />
+            <End Role="Courses" EntitySet="Courses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RegisterStudent_ToTable" Association="Self.FK_RegisterStudent_ToTable">
+            <End Role="AttendanceList" EntitySet="AttendanceList" />
+            <End Role="RegisterStudent" EntitySet="RegisterStudent" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RegisterTeacher_ToTable" Association="Self.FK_RegisterTeacher_ToTable">
+            <End Role="Courses" EntitySet="Courses" />
+            <End Role="RegisterTeacher" EntitySet="RegisterTeacher" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DatabaseStudentsModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="AttendanceList">
+          <Key>
+            <PropertyRef Name="sNr" />
+          </Key>
+          <Property Name="sNr" Type="Int32" Nullable="false" />
+          <Property Name="SN" Type="Int32" Nullable="false" />
+          <Property Name="fName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="lName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="dateArrival" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="dateDeparture" Type="DateTime" Precision="3" />
+          <Property Name="hoursSpent" Type="Int32" />
+          <NavigationProperty Name="RegisterStudent" Relationship="Self.FK_AttendanceList_ToTable" FromRole="AttendanceList" ToRole="RegisterStudent" />
+          <NavigationProperty Name="ChildCourses" Relationship="Self.FK_ChildCourse_ToTable_1" FromRole="AttendanceList" ToRole="ChildCourse" />
+          <NavigationProperty Name="RegisterStudents" Relationship="Self.FK_RegisterStudent_ToTable" FromRole="AttendanceList" ToRole="RegisterStudent" />
+        </EntityType>
+        <EntityType Name="ChildCourse">
+          <Key>
+            <PropertyRef Name="courseID" />
+          </Key>
+          <Property Name="courseID" Type="Int32" Nullable="false" />
+          <Property Name="UserName" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="sNr" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="AttendanceList" Relationship="Self.FK_ChildCourse_ToTable_1" FromRole="ChildCourse" ToRole="AttendanceList" />
+        </EntityType>
+        <EntityType Name="Cours">
+          <Key>
+            <PropertyRef Name="courseID" />
+          </Key>
+          <Property Name="courseName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="SNTeacher" Type="Int32" Nullable="false" />
+          <Property Name="education" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ClassID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="courseID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="RegisterTeacher" Relationship="Self.FK_Courses_ToTable" FromRole="Courses" ToRole="RegisterTeacher" />
+          <NavigationProperty Name="RegisterTeachers" Relationship="Self.FK_RegisterTeacher_ToTable" FromRole="Courses" ToRole="RegisterTeacher" />
+        </EntityType>
+        <EntityType Name="Login">
+          <Key>
+            <PropertyRef Name="UserName" />
+          </Key>
+          <Property Name="SNTeacher" Type="Int32" Nullable="false" />
+          <Property Name="UserName" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="pwd" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RegisterStudent">
+          <Key>
+            <PropertyRef Name="SN" />
+          </Key>
+          <Property Name="SN" Type="Int32" Nullable="false" />
+          <Property Name="fName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="lName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="sNr" Type="Int32" Nullable="false" />
+          <Property Name="semester" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="AttendanceLists" Relationship="Self.FK_AttendanceList_ToTable" FromRole="RegisterStudent" ToRole="AttendanceList" />
+          <NavigationProperty Name="AttendanceList" Relationship="Self.FK_RegisterStudent_ToTable" FromRole="RegisterStudent" ToRole="AttendanceList" />
+        </EntityType>
+        <EntityType Name="RegisterTeacher">
+          <Key>
+            <PropertyRef Name="SNTeacher" />
+          </Key>
+          <Property Name="SNTeacher" Type="Int32" Nullable="false" />
+          <Property Name="UserName" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="pwd" Type="Int32" Nullable="false" />
+          <Property Name="fullName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CourseName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="courseID" Type="Int32" />
+          <Property Name="education" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Courses" Relationship="Self.FK_Courses_ToTable" FromRole="RegisterTeacher" ToRole="Courses" />
+          <NavigationProperty Name="Cours" Relationship="Self.FK_RegisterTeacher_ToTable" FromRole="RegisterTeacher" ToRole="Courses" />
+        </EntityType>
+        <Association Name="FK_AttendanceList_ToTable">
+          <End Role="RegisterStudent" Type="Self.RegisterStudent" Multiplicity="1" />
+          <End Role="AttendanceList" Type="Self.AttendanceList" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RegisterStudent">
+              <PropertyRef Name="SN" />
+            </Principal>
+            <Dependent Role="AttendanceList">
+              <PropertyRef Name="SN" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ChildCourse_ToTable_1">
+          <End Role="AttendanceList" Type="Self.AttendanceList" Multiplicity="1" />
+          <End Role="ChildCourse" Type="Self.ChildCourse" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AttendanceList">
+              <PropertyRef Name="sNr" />
+            </Principal>
+            <Dependent Role="ChildCourse">
+              <PropertyRef Name="sNr" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RegisterStudent_ToTable">
+          <End Role="AttendanceList" Type="Self.AttendanceList" Multiplicity="1" />
+          <End Role="RegisterStudent" Type="Self.RegisterStudent" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AttendanceList">
+              <PropertyRef Name="sNr" />
+            </Principal>
+            <Dependent Role="RegisterStudent">
+              <PropertyRef Name="sNr" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Courses_ToTable">
+          <End Role="RegisterTeacher" Type="Self.RegisterTeacher" Multiplicity="1" />
+          <End Role="Courses" Type="Self.Cours" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RegisterTeacher">
+              <PropertyRef Name="SNTeacher" />
+            </Principal>
+            <Dependent Role="Courses">
+              <PropertyRef Name="SNTeacher" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RegisterTeacher_ToTable">
+          <End Role="Courses" Type="Self.Cours" Multiplicity="0..1" />
+          <End Role="RegisterTeacher" Type="Self.RegisterTeacher" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Courses">
+              <PropertyRef Name="courseID" />
+            </Principal>
+            <Dependent Role="RegisterTeacher">
+              <PropertyRef Name="courseID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DatabaseStudentsEntitiesLastStand" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="AttendanceLists" EntityType="Self.AttendanceList" />
+          <EntitySet Name="ChildCourses" EntityType="Self.ChildCourse" />
+          <EntitySet Name="Courses" EntityType="Self.Cours" />
+          <EntitySet Name="Logins" EntityType="Self.Login" />
+          <EntitySet Name="RegisterStudents" EntityType="Self.RegisterStudent" />
+          <EntitySet Name="RegisterTeachers" EntityType="Self.RegisterTeacher" />
+          <AssociationSet Name="FK_AttendanceList_ToTable" Association="Self.FK_AttendanceList_ToTable">
+            <End Role="RegisterStudent" EntitySet="RegisterStudents" />
+            <End Role="AttendanceList" EntitySet="AttendanceLists" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ChildCourse_ToTable_1" Association="Self.FK_ChildCourse_ToTable_1">
+            <End Role="AttendanceList" EntitySet="AttendanceLists" />
+            <End Role="ChildCourse" EntitySet="ChildCourses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RegisterStudent_ToTable" Association="Self.FK_RegisterStudent_ToTable">
+            <End Role="AttendanceList" EntitySet="AttendanceLists" />
+            <End Role="RegisterStudent" EntitySet="RegisterStudents" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Courses_ToTable" Association="Self.FK_Courses_ToTable">
+            <End Role="RegisterTeacher" EntitySet="RegisterTeachers" />
+            <End Role="Courses" EntitySet="Courses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RegisterTeacher_ToTable" Association="Self.FK_RegisterTeacher_ToTable">
+            <End Role="Courses" EntitySet="Courses" />
+            <End Role="RegisterTeacher" EntitySet="RegisterTeachers" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DatabaseStudentsModelStoreContainer" CdmEntityContainer="DatabaseStudentsEntitiesLastStand">
+          <EntitySetMapping Name="AttendanceLists">
+            <EntityTypeMapping TypeName="DatabaseStudentsModel.AttendanceList">
+              <MappingFragment StoreEntitySet="AttendanceList">
+                <ScalarProperty Name="sNr" ColumnName="sNr" />
+                <ScalarProperty Name="SN" ColumnName="SN" />
+                <ScalarProperty Name="fName" ColumnName="fName" />
+                <ScalarProperty Name="lName" ColumnName="lName" />
+                <ScalarProperty Name="dateArrival" ColumnName="dateArrival" />
+                <ScalarProperty Name="dateDeparture" ColumnName="dateDeparture" />
+                <ScalarProperty Name="hoursSpent" ColumnName="hoursSpent" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ChildCourses">
+            <EntityTypeMapping TypeName="DatabaseStudentsModel.ChildCourse">
+              <MappingFragment StoreEntitySet="ChildCourse">
+                <ScalarProperty Name="courseID" ColumnName="courseID" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="sNr" ColumnName="sNr" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Courses">
+            <EntityTypeMapping TypeName="DatabaseStudentsModel.Cours">
+              <MappingFragment StoreEntitySet="Courses">
+                <ScalarProperty Name="courseName" ColumnName="courseName" />
+                <ScalarProperty Name="SNTeacher" ColumnName="SNTeacher" />
+                <ScalarProperty Name="education" ColumnName="education" />
+                <ScalarProperty Name="ClassID" ColumnName="ClassID" />
+                <ScalarProperty Name="courseID" ColumnName="courseID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Logins">
+            <EntityTypeMapping TypeName="DatabaseStudentsModel.Login">
+              <MappingFragment StoreEntitySet="Login">
+                <ScalarProperty Name="SNTeacher" ColumnName="SNTeacher" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="pwd" ColumnName="pwd" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RegisterStudents">
+            <EntityTypeMapping TypeName="DatabaseStudentsModel.RegisterStudent">
+              <MappingFragment StoreEntitySet="RegisterStudent">
+                <ScalarProperty Name="SN" ColumnName="SN" />
+                <ScalarProperty Name="fName" ColumnName="fName" />
+                <ScalarProperty Name="lName" ColumnName="lName" />
+                <ScalarProperty Name="sNr" ColumnName="sNr" />
+                <ScalarProperty Name="semester" ColumnName="semester" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RegisterTeachers">
+            <EntityTypeMapping TypeName="DatabaseStudentsModel.RegisterTeacher">
+              <MappingFragment StoreEntitySet="RegisterTeacher">
+                <ScalarProperty Name="SNTeacher" ColumnName="SNTeacher" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="pwd" ColumnName="pwd" />
+                <ScalarProperty Name="fullName" ColumnName="fullName" />
+                <ScalarProperty Name="CourseName" ColumnName="CourseName" />
+                <ScalarProperty Name="courseID" ColumnName="courseID" />
+                <ScalarProperty Name="education" ColumnName="education" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
